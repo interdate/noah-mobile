@@ -1,0 +1,32 @@
+
+<ion-header class="mo-innheader">
+</ion-header>
+
+<ion-content>
+  <div class="mo-signin">
+    <div class="mo-inn" style="text-align: center;">
+      <h1 class="mo-pghead"></h1>
+
+      <form class="frm login">
+        <div *ngIf="errors" color="danger" class="err">{{ errors }}</div>
+        <div *ngIf="fbId != 0" class="text-login-fb">
+          <h2>כניסה עם משתמש קיים</h2>
+          <p>לביצוע כניסה ראשונית בלבד נא להכניס את פרטי המשתמש שלך</p>
+        </div>
+        <a (click)="goToRegister();" class="mo button big login-register ui-link">!להרשמה חינם</a>
+        <div class="field">
+          <input [(ngModel)]="email" name="email" type="text" placeholder="הקלד דוא״ל" class="txtbox">
+        </div>
+        <div class="field">
+          <input [(ngModel)]="password" name="password" type="password" placeholder="סיסמא" class="txtbox">
+        </div>
+        <div class="field txtcenter">
+          <input (click)="login();" type="submit" value="כניסה" class="mo button big" />
+        </div>
+        <button class="fb-login" (click)="loginFB();" *ngIf="fbId == 0">FB</button>
+        <div class="txtcenter"><a (click)="goToRecovery();" >שכחתי את הסיסמא</a></div>
+      </form>
+    </div>
+  </div>
+  <!-- end -->
+</ion-content>
