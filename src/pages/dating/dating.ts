@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {Content, IonicPage, NavController, NavParams} from 'ionic-angular';
+import {AlertController, Content, IonicPage, NavController, NavParams} from 'ionic-angular';
 import * as $ from "jquery";
 import {ApiQuery} from "../../library/api-query";
 import {HomePage} from "../home/home";
@@ -14,18 +14,19 @@ import {HomePage} from "../home/home";
 })
 export class DatingPage {
     @ViewChild(Content) content: Content;
-    form: any;
-    invite: any;
-    errors: any = {};
-    pageData: any;
-    inviteDate: any;
-    inviteTime: any;
-    chooseRes: any;
+    public form: any;
+    public invite: any = {countryRegionId:''};
+    public errors: any = {};
+    public pageData: any;
+    public inviteDate: any;
+    public inviteTime: any;
+    public chooseRes: any;
 
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
-        public api: ApiQuery
+        public api: ApiQuery,
+        private alertCtrl: AlertController
     ) {
         this.api.showLoad();
         this.api.http.post(this.api.url + '/user/invite/' + this.navParams.get('userId'),{},this.api.setHeaders(true)).subscribe(
@@ -49,9 +50,11 @@ export class DatingPage {
         );
     }
 
-    setHtmlById(id, html){
+    setHtmlById(id, html, regionName = ''){
         setTimeout(function () {
             html = html.replace("[COUNT]",$('#restorans ul li').length);
+            html = html.replace("[AREA]", regionName);
+
             if($('#' + id).html() != html) {
                 $('#' + id).html(html);
                 // let div: any = document.createElement('div');
@@ -87,11 +90,45 @@ export class DatingPage {
     }
 
     restoranSel(field){
-        this.chooseRes = field;
-        this.setHtmlById('rest-html', this.chooseRes.data.html);
-        $('#form').hide();
-        $('#restorans').show();
-        this.content.scrollToTop(300);
+        if(this.invite && this.invite.countryRegionId != ''
+            && this.invite.d != "" && this.invite.m != "" && this.invite.y != ''
+            && this.invite.h != "" && this.invite.min != "") {
+            this.chooseRes = field;
+            let regionName = '';
+            let regVal = this.invite.countryRegionId;
+            this.form.fields[0].options.forEach(function (area) {
+                //console.log(JSON.stringify(area));
+                if (area.val == regVal) {
+                    regionName = area.label;
+                }
+            });
+            //console.log(regionName, regVal);
+            //console.log(this.invite.countryRegionId);
+            this.setHtmlById('rest-html', this.chooseRes.data.html, regionName);
+            $('#form').hide();
+            $('#restorans').show();
+            this.content.scrollToTop(300);
+        }else{
+            //לא מולאו כל השדות הדרושים, נא מלא את הטופס שוב. שדות חובה: איזור, מיקום תאריך
+            let mess = 'שדות חובה:';
+            if(this.invite.countryRegionId == ''){
+                mess += ' איזור,';
+            }
+            if(this.invite.d == "" || this.invite.m == "" || this.invite.y == ''){
+                mess += ' תאריך הפגישה,';
+            }
+            if(this.invite.h == "" || this.invite.min == ""){
+                mess += ' שעת הפגישה,';
+            }
+            mess = mess.slice(0, -1);
+            let alert = this.alertCtrl.create({
+                title: 'לא מולאו כל השדות הדרושים',
+                subTitle: 'נא מלא את הטופס שוב',
+                message: mess,
+                buttons: ['סגור']
+            });
+            alert.present();
+        }
     }
 
     selectRestoran(restoran){

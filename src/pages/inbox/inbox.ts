@@ -31,6 +31,7 @@ export class InboxPage {
     users: any = [];
     scroll: any;
     init: any = true;
+    public chatWith: any;
 
     constructor(
         public navCtrl: NavController,
@@ -43,6 +44,20 @@ export class InboxPage {
     }
 
     ionViewWillEnter() {
+        if(this.chatWith){
+            let index = this.users.indexOf(this.chatWith);
+            if(this.chatWith.user.userId == 0){
+                this.users.slice(index,1);
+            }else {
+                this.api.http.get(this.api.url + '/user/inbox/' + this.chatWith.user.userId, this.api.setHeaders(true)).subscribe((data: any) => {
+                    if (data.res) {
+                        this.users[index] = data.res;
+                    } else {
+                        this.users.slice(index, 1);
+                    }
+                });
+            }
+        }
         this.api.activePageName = 'InboxPage';
         $('#back').show();
         $('#register,#logout,#contact').hide();
@@ -76,6 +91,7 @@ export class InboxPage {
     }
 
     chat(user){
+        this.chatWith = user;
         this.navCtrl.push(ChatPage,{user: user.user});
     }
 

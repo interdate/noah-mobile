@@ -14,7 +14,7 @@
             <div class="mo-restau-list">
                 <ul>
                     <div *ngFor="let restor of chooseRes?.options">
-                        <li (click)="selectRestoran(restor);" *ngIf="invite?.countryRegionId == '' || invite?.countryRegionId == restor?.countryRegionId">
+                        <li (click)="selectRestoran(restor);" *ngIf="invite?.countryRegionId == restor?.countryRegionId">
                             <div class="inn cf">
                                 <a class="thumb"><img src="{{ restor?.photo }}" alt="user"></a>
                                 <div class="cont">
