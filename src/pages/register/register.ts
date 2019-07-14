@@ -425,7 +425,7 @@ export class RegisterPage {
                 const fd = new FormData();
 
                 // Prepare form data to send to server
-                fd.append('photo', blob, 'test.jpg');
+                fd.append('file', blob, 'test.jpg');
 
                 let header = {
                     headers: {

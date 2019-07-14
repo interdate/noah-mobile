@@ -173,7 +173,7 @@
                                 </div>
                             </div>
 
-                            <div *ngIf="i != 0 && user.noPhoto != user.photos[0]?.url && user.photos[0]?.imgValidated == '1'" class="photo" (click)="edit(photo)">
+                            <div *ngIf="i != 0 && user.noPhoto != user.photos[0]?.url" class="photo" (click)="edit(photo)">
                                 <div class="wrap">
                                     <div class="photo-img" *ngIf="user.noPhoto != photo.url" [ngStyle]="{ 'background-image': 'url(' + photo.url + ')'}"></div>
                                     <div class="photo-img" *ngIf="user.noPhoto == photo.url" [ngStyle]="{ 'background-image': 'url(assets/images/' + photo.type + '_' + user.userGender + '.png)'}"></div>
