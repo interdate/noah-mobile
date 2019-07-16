@@ -1,18 +1,25 @@
-import { Component, ViewChild } from '@angular/core';
-import {ActionSheetController, AlertController, Content, NavController, NavParams, Navbar, Platform} from 'ionic-angular';
+import {Component, ViewChild} from '@angular/core';
+import {
+    ActionSheetController,
+    AlertController,
+    Content,
+    NavController,
+    NavParams,
+    Navbar,
+    Platform
+} from 'ionic-angular';
 import {ApiQuery} from "../../library/api-query";
 import * as $ from "jquery";
 import {HomePage} from "../home/home";
 import {Page} from "../page/page";
+
 declare var setChoosen;
 declare var setSelect2;
 
 
-
-
 @Component({
-  selector: 'page-register',
-  templateUrl: 'register.html',
+    selector: 'page-register',
+    templateUrl: 'register.html',
 })
 export class RegisterPage {
     @ViewChild(Content) content: Content;
@@ -21,7 +28,10 @@ export class RegisterPage {
     user: any = {photos: []};
     form: any = {fields: []};
     errors: any;
+    img: any;
+    currentImageIndex: any;
     activePhoto: any;
+    showLoader: any = true;
 
     constructor(
         public navCtrl: NavController,
@@ -36,7 +46,7 @@ export class RegisterPage {
             this.login = val;
             this.user = this.navParams.get('user');
 
-            if(!this.navParams.get('user') && this.navParams.get('step')){
+            if (!this.navParams.get('user') && this.navParams.get('step')) {
 
                 this.user = {step: this.navParams.get('step'), register: this.login ? false : true};
 
@@ -51,7 +61,7 @@ export class RegisterPage {
         //jQuery = setChoosen(jQuery);
     }
 
-    changePassFn(field){
+    changePassFn(field) {
         let alert = this.alertCtrl.create({
             title: field.label,
             inputs: field.form,
@@ -86,15 +96,15 @@ export class RegisterPage {
         alert.present();
     }
 
-    savePass(data){
+    savePass(data) {
         this.api.showLoad();
         this.api.http.post(this.api.url + '/user/change-password', data, this.api.setHeaders(true)).subscribe((res: any) => {
             this.api.hideLoad();
-            if(res.success) {
+            if (res.success) {
                 this.api.storage.set('password', data.userPass);
                 this.api.setHeaders(true, false, data.userPass);
             }
-            if(typeof res.alertMess != 'undefined') {
+            if (typeof res.alertMess != 'undefined') {
                 let alert = this.alertCtrl.create({
                     title: res.alertMess.title,
                     subTitle: res.alertMess.message,
@@ -105,18 +115,18 @@ export class RegisterPage {
         });
     }
 
-    passValid(data, err){
+    passValid(data, err) {
         console.log(data);
         let res = true;
-        if(data.oldPass === '' || data.userPass === '' || data.userPass2 === ''){
+        if (data.oldPass === '' || data.userPass === '' || data.userPass2 === '') {
             res = err.err2;
-        }else if(res === true && this.user.userPass !== data.oldPass){
+        } else if (res === true && this.user.userPass !== data.oldPass) {
             res = err.err1;
-        }else if(res === true && data.userPass.length < 6 || data.userPass2.length < 6){
+        } else if (res === true && data.userPass.length < 6 || data.userPass2.length < 6) {
             res = err.err3;
-        }else if(res === true && data.userPass !== data.userPass2){
+        } else if (res === true && data.userPass !== data.userPass2) {
             res = err.err4;
-        }else if(res === true && data.oldPass === data.userPass){
+        } else if (res === true && data.oldPass === data.userPass) {
             res = err.err5;
         }
         // if(this.user.userPass === data.oldPass && data.userPass === data.userPass2){
@@ -126,16 +136,20 @@ export class RegisterPage {
         //this.api.storage.set('password', this.password);
     }
 
-    sendForm(){
-        this.api.showLoad();
+    sendForm() {
+        if(this.showLoader) {
+            this.api.showLoad();
+        }
+
+        this.showLoader = true;
         var header = this.api.setHeaders((this.login == 'login') ? true : false);
         //console.log(header);
         //alert(this.login);
-        if(typeof this.user != 'undefined' && this.user.step != 3 && typeof this.form.fields != 'undefined') {
+        if (typeof this.user != 'undefined' && this.user.step != 3 && typeof this.form.fields != 'undefined') {
             //this.user.userCity = $('#userCity').val();
             //this.user.countryOfOriginId = $('#countryOfOriginId').val();
             this.form.fields.forEach(field => {
-                if(field.type == 'select'){
+                if (field.type == 'select') {
                     this.user[field.name] = $('#' + field.name).val();
                 }
             });
@@ -143,34 +157,34 @@ export class RegisterPage {
         this.api.http.post(this.api.url + '/user/register', this.user, header).subscribe(
             (data: any) => {
                 //alert(JSON.stringify(data));
-                console.log('register: ', data);
-                console.log('register: ',JSON.stringify(data));
+                // console.log('register: ', data);
+                //console.log('register: ',JSON.stringify(data));
                 this.form = data.form;
                 this.user = data.user;
                 this.errors = data.errors;
 
-                if(this.user.step == 3 ){
-                    this.api.setHeaders(true,this.user.userEmail,this.user.userPass);
+                if (this.user.step == 3) {
+                    this.api.setHeaders(true, this.user.userEmail, this.user.userPass);
                     this.login = 'login';
-                    this.api.storage.set('status','login');
-                    this.api.storage.set('user_id',this.user.userId);
-                    this.api.storage.set('username',this.user.userEmail);
-                    this.api.storage.set('password',this.user.userPass);
+                    this.api.storage.set('status', 'login');
+                    this.api.storage.set('user_id', this.user.userId);
+                    this.api.storage.set('username', this.user.userEmail);
+                    this.api.storage.set('password', this.user.userPass);
                     //alert(JSON.stringify(this.user.photos));
                     let that = this;
                     setTimeout(function () {
                         that.api.hideLoad();
-                    },1000);
-                }else{
+                    }, 1000);
+                } else {
                     this.api.hideLoad();
                 }
-                if(this.user.step == 2 && !this.user.register){
-                    this.api.storage.set('username',this.user.userEmail);
-                    this.api.setHeaders(true,this.user.userEmail);
+                if (this.user.step == 2 && !this.user.register) {
+                    this.api.storage.set('username', this.user.userEmail);
+                    this.api.setHeaders(true, this.user.userEmail);
                 }
-                if(this.user.step != 3){
+                if (this.user.step != 3) {
                     this.form.fields.forEach(field => {
-                        if(field.type == 'select' /*&& field.name != 'userCity' && field.name != 'countryOfOriginId'*/){
+                        if (field.type == 'select' /*&& field.name != 'userCity' && field.name != 'countryOfOriginId'*/) {
                             this.select2(field);
                         }
                     });
@@ -179,14 +193,14 @@ export class RegisterPage {
             }, err => {
                 this.api.hideLoad();
                 console.log('registerError: ', err);
-                console.log('registerError: ',JSON.stringify(err));
+                console.log('registerError: ', JSON.stringify(err));
                 //this.api.storage.remove('status');
                 this.errors = err._body;
             }
         );
     }
 
-    choosen(sel){
+    choosen(sel) {
         setChoosen(sel,
             {
                 no_results_text: "אין תוצאות",
@@ -198,7 +212,7 @@ export class RegisterPage {
 
     }
 
-    select2(field){
+    select2(field) {
         setSelect2('#' + field.name,
             {
                 placeholder: "בחר מהרשימה"
@@ -206,16 +220,16 @@ export class RegisterPage {
         );
     }
 
-    stepBack(){
-        if(this.user.step == 3){
+    stepBack() {
+        if (this.user.step == 3) {
             this.user.register = false;
         }
         this.user.step = this.user.step - 2;
         this.sendForm();
     }
 
-    setHtml(id,html){
-        if($('#' + id).html() == '' && html != '') {
+    setHtml(id, html) {
+        if ($('#' + id).html() == '' && html != '') {
             let div: any = document.createElement('div');
             div.innerHTML = html;
             [].forEach.call(div.getElementsByTagName("a"), (a) => {
@@ -229,15 +243,15 @@ export class RegisterPage {
         }
     }
 
-    getPage(pageId){
-        this.navCtrl.push(Page,{pageId: pageId});
+    getPage(pageId) {
+        this.navCtrl.push(Page, {pageId: pageId});
     }
 
     ionViewDidLoad() {
         // this.navBar.backButtonClick = () => {
         //     this.navCtrl.pop();
         // };
-        this.navBar.backButtonClick = (ev:UIEvent) => {
+        this.navBar.backButtonClick = (ev: UIEvent) => {
             alert('this will work in Ionic 3+');
         }
     }
@@ -248,34 +262,32 @@ export class RegisterPage {
         $('#logout,#register').hide();
         this.api.storage.get('status').then((val) => {
             this.login = val;
-            if(this.login == 'login'){
+            if (this.login == 'login') {
                 $('#contact').hide();
                 $('.header').removeClass('not-login');
-            }else{
+            } else {
                 $('#contact').css({'left': '15px', 'right': 'auto'}).show();
                 $('.header').addClass('not-login');
             }
             setTimeout(function () {
                 $('.fixed-content,.scroll-content').css({'margin-top': $('.header').innerHeight() + 'px'});
-            },10);
+            }, 10);
         });
 
     }
 
     ionViewWillLeave() {
         $('#contact').removeAttr('style');
-        if(this.login == 'login'){
+        if (this.login == 'login') {
             //this.navCtrl.push(HomePage);
             $('.mo-logo').click();
         }
 
     }
 
-    edit(photo) {
+    edit(photo, index) {
         this.activePhoto = photo;
         let mainOpt = [];
-
-        console.log(photo);
 
         mainOpt.push({
             text: 'בחר תמונה',
@@ -286,9 +298,10 @@ export class RegisterPage {
             }
         });
 
-        //alert(JSON.stringify(photo));
 
-        if(this.user.noPhoto != photo.url && photo.imgMain == '0') {
+        this.currentImageIndex = index;
+
+        if (this.user.noPhoto != photo.url && photo.imgMain == '0') {
             mainOpt.push({
                 text: this.form.texts.delete,
                 role: 'destructive',
@@ -358,17 +371,43 @@ export class RegisterPage {
         actionSheet.present();
     }
 
-    browserUpload(){
+    browserUpload() {
         $('#fileLoader').click();
     }
 
-    uploadPhotoInput(fileLoader){
-        this.api.showLoad();
+    uploadPhotoInput(fileLoader, event) {
+
+        //this.api.showLoad();
         let that = this;
         let file = fileLoader.files[0];
         let reader = new FileReader();
 
         if (file) {
+
+            this.api.showLoad();
+
+            let that = this;
+
+            setTimeout(function(){
+                that.api.hideLoad();
+            },4000);
+
+            this.currentImageIndex = (typeof this.currentImageIndex == 'undefined') ? 0 : this.currentImageIndex;
+
+            // Set preview image
+            if (event.target.files && event.target.files[0]) {
+                let reader = new FileReader();
+
+                reader.onload = (event: any) => {
+                    $('.photo-id-' + this.currentImageIndex).css('background-image', 'url(' + event.target.result + ')');
+                }
+                reader.readAsDataURL(event.target.files[0]);
+            }
+            let fileList: FileList = event.target.files;
+            let file: File = fileList[0];
+            console.log(file);
+
+
             reader.onload = function () {
                 that.getOrientation(fileLoader.files[0], function (orientation) {
                     if (orientation > 1) {
@@ -384,16 +423,16 @@ export class RegisterPage {
         }
     }
 
-    uploadPhotoBrowser(dataUrl){
-        if(dataUrl) {
+    uploadPhotoBrowser(dataUrl) {
+        if (dataUrl) {
             let that = this;
-            that.api.showLoad();
+            //that.api.showLoad();
             //resize
             let canvas = document.createElement("canvas");
             let img = document.createElement("img");
             let dataImage = that.getInfoFromBase64(dataUrl);
             img.src = dataUrl;
-            img.onload = function() {
+            img.onload = function () {
                 //let ctx = canvas.getContext("2d");
                 //ctx.drawImage(img, 0, 0);
 
@@ -436,7 +475,8 @@ export class RegisterPage {
                 that.api.http.post(that.api.url + '/user/image/' + that.activePhoto.id + '/' + that.activePhoto.type, fd, header).subscribe((res: any) => {
 
                     //that.photos = res.images.items;
-                    that.api.hideLoad();
+                    //that.api.hideLoad();
+                    that.showLoader = false;
                     that.sendForm();
                 }, (err) => {
                     console.log(JSON.stringify(err));
@@ -480,7 +520,7 @@ export class RegisterPage {
             byteArrays.push(new Uint8Array(byteNumbers));
         }
 
-        return new Blob(byteArrays, { type: info.mime });
+        return new Blob(byteArrays, {type: info.mime});
     }
 
     private getInfoFromBase64(base64: string) {
@@ -499,7 +539,7 @@ export class RegisterPage {
 
     getOrientation(file, callback) {
         let reader = new FileReader();
-        reader.onload = function (e:any) {
+        reader.onload = function (e: any) {
 
             let view = new DataView(e.target.result);
             if (view.getUint16(0, false) != 0xFFD8) return callback(-2);
@@ -516,14 +556,14 @@ export class RegisterPage {
                     for (let i = 0; i < tags; i++)
                         if (view.getUint16(offset + (i * 12), little) == 0x0112)
                             return callback(view.getUint16(offset + (i * 12) + 8, little));
-                }
-                else if ((marker & 0xFF00) != 0xFF00) break;
+                } else if ((marker & 0xFF00) != 0xFF00) break;
                 else offset += view.getUint16(offset, false);
             }
             return callback(-1);
         };
         reader.readAsArrayBuffer(file);
     }
+
     resetOrientation(srcBase64, srcOrientation, callback) {
         let img = new Image();
 
@@ -544,14 +584,29 @@ export class RegisterPage {
 
             // transform context before drawing image
             switch (srcOrientation) {
-                case 2: ctx.transform(-1, 0, 0, 1, width, 0); break;
-                case 3: ctx.transform(-1, 0, 0, -1, width, height); break;
-                case 4: ctx.transform(1, 0, 0, -1, 0, height); break;
-                case 5: ctx.transform(0, 1, 1, 0, 0, 0); break;
-                case 6: ctx.transform(0, 1, -1, 0, height, 0); break;
-                case 7: ctx.transform(0, -1, -1, 0, height, width); break;
-                case 8: ctx.transform(0, -1, 1, 0, 0, width); break;
-                default: break;
+                case 2:
+                    ctx.transform(-1, 0, 0, 1, width, 0);
+                    break;
+                case 3:
+                    ctx.transform(-1, 0, 0, -1, width, height);
+                    break;
+                case 4:
+                    ctx.transform(1, 0, 0, -1, 0, height);
+                    break;
+                case 5:
+                    ctx.transform(0, 1, 1, 0, 0, 0);
+                    break;
+                case 6:
+                    ctx.transform(0, 1, -1, 0, height, 0);
+                    break;
+                case 7:
+                    ctx.transform(0, -1, -1, 0, height, width);
+                    break;
+                case 8:
+                    ctx.transform(0, -1, 1, 0, 0, width);
+                    break;
+                default:
+                    break;
             }
 
             // draw image
@@ -565,7 +620,7 @@ export class RegisterPage {
     }
 
 
-    goToHome(){
+    goToHome() {
         //this.navCtrl.push(HomePage);
         this.navCtrl.setRoot(HomePage);
         this.navCtrl.popToRoot();

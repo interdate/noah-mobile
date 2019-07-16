@@ -101,9 +101,8 @@
 
                         <div class="field" *ngIf="field.type == 'restorans'" [ngClass]="{'error': errors[field.name]}">
                             <div><label>{{ field.label }}</label></div>
-                            <div class="mo-restau">
-                                <a (click)="restoranSel(field)">{{ field.text }}</a>
-                                <p></p>
+                            <div tappable (click)="restoranSel(field)" class="mo-restau">
+                                <a>{{ field.text }}</a>
                             </div>
                             <div class="mo-restau-list" *ngIf="invite[field.name] != ''">
                                 <ul>

@@ -7,7 +7,7 @@
   "proxies": [
     {
       "path": "/",
-      "proxyUrl": "http://m.dos2date.co.il/api/v1"
+      "proxyUrl": "https://m.dos2date.co.il/api/v1"
     }
   ]
 }

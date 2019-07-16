@@ -31,6 +31,31 @@ $mobile_url: 'http://m.noah.kosherdate.co.il/';
   padding: 10px 5px;
 }
 
+.admin-message {
+  background: #189dbc;
+  width:100%;
+  position: absolute;
+  height:20%;
+  bottom: 0;
+  padding: 2% 5%;
+  font-size: 1.8rem;
+  color: #fff;
+  h2 {
+    margin: .2rem;
+  }
+  div {
+    height: 100%;
+    overflow: scroll;
+  }
+  .close {color: #b51f2d;
+    font-size: 2.6rem;
+    position: absolute;
+    top:2%;
+    left:2%;
+    font-weight: bold;
+  }
+}
+
 .ion-page{
   background-color: #282f39;
   background-image: url(../assets/images/signinbg.jpg);

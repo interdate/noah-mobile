@@ -27,7 +27,7 @@ export class MyApp {
     bingo: any;
     status: any = 'logout';
     counters: any;
-
+    adminMessage: any = false;
     constructor(
         public platform: Platform,
         public statusBar: StatusBar,
@@ -121,7 +121,7 @@ export class MyApp {
             if (val) {
                 this.api.http.get(this.api.url + '/user/bingo', this.api.setHeaders(true)).subscribe(
                     (data: any) => {
-                        console.log('bingo: ', data);
+                        //console.log('bingo: ', data);
                         this.bingo = data.bingo.items
                         if(this.bingo.length > 0){
                             this.showSplash();
@@ -144,7 +144,8 @@ export class MyApp {
             if (val) {
                 this.api.http.get(this.api.url + '/user/newMessagesCount',this.api.setHeaders(true)).subscribe(
                     (data: any) => {
-                        console.log('newMessagesCount: ', data);
+                        //console.log('newMessagesCount: ', data);
+                        this.adminMessage = data.adminMessage.msgBody;
                         this.counters = data.counters;
                         if(this.counters.newMessagesCount > 0){
                             $('.mo-notify').show();
@@ -214,7 +215,7 @@ export class MyApp {
 
             this.api.http.post(this.api.url + '/user/bingo/splashed',splash,this.api.setHeaders(true)).subscribe(
                 (data: any) => {
-                    console.log('splashed: ', data);
+                    //console.log('splashed: ', data);
 
                 }, err => {
                     console.log('splashed: ', err);
@@ -224,6 +225,17 @@ export class MyApp {
 
         }
     }
+
+    closeAdminMessage(){
+        this.api.http.post(this.api.url + '/user/adminmessages/read',{}, this.api.setHeaders(true)).subscribe(data => {
+
+        }, err => {
+            console.log('logout: ', err);
+
+        });
+        this.adminMessage = false;
+    }
+
 
     bingoFn(action,user){
         //alert(JSON.stringify(user));
@@ -247,6 +259,7 @@ export class MyApp {
         this.nav.push(ContactPage);
     }
 
+
     notifications(){
         this.nav.push(NotificationPage);
     }
@@ -255,7 +268,7 @@ export class MyApp {
         this.api.storage.remove('status');
         this.api.http.get(this.api.url + '/user/logout', this.api.setHeaders(true)).subscribe(data => {
             //alert(JSON.stringify(data));
-            console.log('logout: ', data);
+            //console.log('logout: ', data);
             // $('#my_arena,#invitations,.mo-notify').hide();
             // this.api.storage.remove('user_id');
             // this.rootPage = LoginPage;

@@ -90,6 +90,8 @@ export class DatingPage {
     }
 
     restoranSel(field){
+        this.api.showLoad('טוען מסעדות רלוונטיות עבורך');
+        console.log(1);
         if(this.invite && this.invite.countryRegionId != ''
             && this.invite.d != "" && this.invite.m != "" && this.invite.y != ''
             && this.invite.h != "" && this.invite.min != "") {
@@ -129,6 +131,8 @@ export class DatingPage {
             });
             alert.present();
         }
+        this.api.hideLoad();
+
     }
 
     selectRestoran(restoran){
