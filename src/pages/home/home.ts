@@ -24,6 +24,7 @@ export class HomePage {
     }
 
     ionViewWillEnter() {
+        this.api.setLocation();
         this.api.activePageName = 'HomePage';
         $('#logout').show();
         $('#register,#back,#contact').hide();

@@ -36,6 +36,8 @@
                                     <a (click)="chat(user);">{{ pageData.send_message }}</a>
                                 </div>
                             </div>
+                            <div class="distance">{{user.distance}}</div>
+
                         </div>
                         <div *ngIf="user?.isBingo == '1'" (click)="chat(user)" class="dating"></div>
                     </li>

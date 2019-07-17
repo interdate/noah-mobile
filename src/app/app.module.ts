@@ -40,6 +40,7 @@ import {RecoveryPage} from "../pages/recovery/recovery";
 import {ResultsPage} from "../pages/results/results";
 import {SearchPage} from "../pages/search/search";
 import {NotificationPage} from "../pages/notification/notification";
+import {Geolocation} from "@ionic-native/geolocation";
 
 
 
@@ -101,6 +102,7 @@ import {NotificationPage} from "../pages/notification/notification";
         Facebook,
         StatusBar,
         SplashScreen,
+        Geolocation,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         ApiQuery,
         Deeplinks
