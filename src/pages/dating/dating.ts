@@ -89,9 +89,17 @@ export class DatingPage {
         this.invite[field.name_min] = res[1];
     }
 
+    onChange(event){
+        this.api.http.get(this.api.url + '/restaurants/'+ event,this.api.setHeaders(false)).subscribe( data => {
+            this.form.fields[2].options = data.result;
+            console.log(this.form.fields)
+
+        });
+
+    }
+
     restoranSel(field){
         this.api.showLoad('טוען מסעדות רלוונטיות עבורך');
-        console.log(1);
         if(this.invite && this.invite.countryRegionId != ''
             && this.invite.d != "" && this.invite.m != "" && this.invite.y != ''
             && this.invite.h != "" && this.invite.min != "") {

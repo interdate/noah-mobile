@@ -61,7 +61,7 @@
                         <div class="field" *ngIf="field.type == 'select'" [ngClass]="{'error': errors[field.name]}">
                             <label>{{ field.label }}</label>
                             <ion-item>
-                                <ion-select interface="popover" name="{{ field.name }}" [(ngModel)]="invite[field.name]" (ionChange)="invite.restoran = '';">
+                                <ion-select interface="popover" name="{{ field.name }}" [(ngModel)]="invite[field.name]" (ionChange)="invite.restoran = '';onChange($event)">
                                     <option></option>
                                     <ion-option *ngFor="let option of field.options;" value="{{ option.val }}">
                                         {{ option.label }}
