@@ -16,8 +16,8 @@
             <div *ngIf="user?.isPaying == '1'" class="vip"></div>
             <ul *ngIf="previewItems?.length > 0">
                 <li *ngFor="let singleImage of previewItems; let i=index;">
-                    <div class="tbl">
-                        <div class="cell"><img [src]="singleImage?.src" [alt]="singleImage?.title" (click)="pswpSingleThumbnail(i)"></div>
+                    <div>
+                        <div><img [src]="singleImage?.src" [alt]="singleImage?.title" (click)="pswpSingleThumbnail(i)"></div>
                     </div>
                 </li>
             </ul>

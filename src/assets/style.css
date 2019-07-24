@@ -49,6 +49,10 @@ table { border-collapse: collapse; border-spacing: 0; width: 100%; }
 .clr, .clear { clear: both; display: block; }
 .cf:after, .wrap:after, ul:after, ol:after, .clearfix:after { clear: both; content: ''; display: block; width: 100%; }
 
+.profile-img ul:after, .profile-img ol:after {
+	width: auto;
+}
+
 /*================================================== FORM */
 button, input, select, textarea { border-radius: 0px; -webkit-border-radius: 0px; border: 0px; background: none; font-size: 100%; color: #000; display: block; padding: 0 10px;
 	text-transform: none; width: 100%; }
@@ -392,8 +396,8 @@ a.button.big2 { line-height: 60px; }
 .profileinn { background: #fff; border: 1px solid #e5e5e5; margin-right: 30px; }
 .profile-img { position: relative; /*border-bottom: 1px solid #e5e5e5;*/ padding: 0 30px; }
 .profile-img .vip { top: -10px; left: 30px; }
-.profile-img ul { text-align: center; height: 100px; direction: ltr;}
-.profile-img ul li { display: inline-block; vertical-align: top; padding: 0 10px; height: 100%}
+.profile-img ul { text-align: center; display: flex; justify-content: center; height: 220px; direction: ltr;}
+.profile-img img {max-height:220px}
 .profile-img ul li .cell { height: 205px; }
 .profile-img .txtcenter { padding: 30px 0 10px 0; }
 .profile-img h4 { margin-bottom: 20px; }
@@ -709,9 +713,9 @@ body .action-sheet-md .action-sheet-icon{
 .sform { width: 50%; }
 .userslider { padding: 40px 60px; }
 /**/
-.profile-img ul li { width: 24.71%; padding: 5px; }
+.profile-img ul li { /*width: 24.71%;*/ padding: 5px; }
 .profile-img ul li .cell { height: inherit; }
-.profile-img ul li .cell img {max-height: 100px; margin: 0 auto;}
+.profile-img ul li .cell img {max-height: 220px; margin: 0 auto;}
 /**/
 .formdiv { padding: 0 20px; }
 .profile-list li .field a { font-size: 18px; min-width: inherit; }
