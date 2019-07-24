@@ -3,8 +3,8 @@ import {AlertController, Content, IonicPage, NavController, NavParams} from 'ion
 import * as $ from "jquery";
 import {ApiQuery} from "../../library/api-query";
 import {HomePage} from "../home/home";
-//import set = Reflect.set;
 
+//import set = Reflect.set;
 
 
 @IonicPage()
@@ -15,7 +15,7 @@ import {HomePage} from "../home/home";
 export class DatingPage {
     @ViewChild(Content) content: Content;
     public form: any;
-    public invite: any = {countryRegionId:''};
+    public invite: any = {countryRegionId: ''};
     public errors: any = {};
     public pageData: any;
     public inviteDate: any;
@@ -29,7 +29,7 @@ export class DatingPage {
         private alertCtrl: AlertController
     ) {
         this.api.showLoad();
-        this.api.http.post(this.api.url + '/user/invite/' + this.navParams.get('userId'),{},this.api.setHeaders(true)).subscribe(
+        this.api.http.post(this.api.url + '/user/invite/' + this.navParams.get('userId'), {}, this.api.setHeaders(true)).subscribe(
             (data: any) => {
                 //alert(JSON.stringify(data));
                 console.log('register: ', data);
@@ -50,32 +50,33 @@ export class DatingPage {
         );
     }
 
-    setHtmlById(id, html, regionName = ''){
+    setHtmlById(id, html, regionName = '') {
+        let that = this;
         setTimeout(function () {
-            html = html.replace("[COUNT]",$('#restorans ul li').length);
+            html = html.replace("[COUNT]", that.chooseRes.count);
             html = html.replace("[AREA]", regionName);
 
-            if($('#' + id).html() != html) {
+            if ($('#' + id).html() != html) {
                 $('#' + id).html(html);
                 // let div: any = document.createElement('div');
                 // div.innerHTML = html;
                 // $('#' + id).append(div);
             }
-        },10);
+        }, 10);
 
     }
 
-    goToHome(){
+    goToHome() {
         //this.navCtrl.push(HomePage);
         this.navCtrl.setRoot(HomePage);
         this.navCtrl.popToRoot();
     }
 
-    clickByElement(el){
+    clickByElement(el) {
         $(el).click();
     }
 
-    chooseDate(field){
+    chooseDate(field) {
         var res = this.inviteDate.split("-");
 
         this.invite[field.name_y] = res[0];
@@ -83,31 +84,34 @@ export class DatingPage {
         this.invite[field.name_d] = res[2];
     }
 
-    chooseTime(field){
+    chooseTime(field) {
         var res = this.inviteTime.split(":");
         this.invite[field.name_h] = res[0];
         this.invite[field.name_min] = res[1];
     }
 
-    onChange(event){
-        this.api.http.get(this.api.url + '/restaurants/'+ event,this.api.setHeaders(false)).subscribe( data => {
+    onChange(event) {
+        this.api.http.get(this.api.url + '/restaurants/' + event, this.api.setHeaders(false)).subscribe(data => {
             this.form.fields[2].options = data.result;
+            this.form.fields[2].count = data.result.length;
             console.log(this.form.fields)
 
         });
 
     }
 
-    restoranSel(field){
+    restoranSel(field) {
+        //console.log(1232341);
         this.api.showLoad('טוען מסעדות רלוונטיות עבורך');
-        if(this.invite && this.invite.countryRegionId != ''
+        if (this.invite && this.invite.countryRegionId != ''
             && this.invite.d != "" && this.invite.m != "" && this.invite.y != ''
             && this.invite.h != "" && this.invite.min != "") {
+            let rests = field.options;
+            field.options = [];
             this.chooseRes = field;
             let regionName = '';
             let regVal = this.invite.countryRegionId;
             this.form.fields[0].options.forEach(function (area) {
-                //console.log(JSON.stringify(area));
                 if (area.val == regVal) {
                     regionName = area.label;
                 }
@@ -117,17 +121,20 @@ export class DatingPage {
             this.setHtmlById('rest-html', this.chooseRes.data.html, regionName);
             $('#form').hide();
             $('#restorans').show();
+            setTimeout(function(){
+                field.options = rests;
+            },100);
             this.content.scrollToTop(300);
-        }else{
+        } else {
             //לא מולאו כל השדות הדרושים, נא מלא את הטופס שוב. שדות חובה: איזור, מיקום תאריך
             let mess = 'שדות חובה:';
-            if(this.invite.countryRegionId == ''){
+            if (this.invite.countryRegionId == '') {
                 mess += ' איזור,';
             }
-            if(this.invite.d == "" || this.invite.m == "" || this.invite.y == ''){
+            if (this.invite.d == "" || this.invite.m == "" || this.invite.y == '') {
                 mess += ' תאריך הפגישה,';
             }
-            if(this.invite.h == "" || this.invite.min == ""){
+            if (this.invite.h == "" || this.invite.min == "") {
                 mess += ' שעת הפגישה,';
             }
             mess = mess.slice(0, -1);
@@ -143,12 +150,12 @@ export class DatingPage {
 
     }
 
-    selectRestoran(restoran){
+    selectRestoran(restoran) {
         this.invite.countryRegionId = restoran.countryRegionId;
         var that = this;
-        setTimeout(function(){
+        setTimeout(function () {
             that.invite.restoran = restoran.placeId;
-        },20);
+        }, 20);
 
         $('#form').show();
         $('#restorans').hide();
@@ -161,10 +168,10 @@ export class DatingPage {
         $('#register,#logout,#contact').hide();
     }
 
-    sendInvite(){
+    sendInvite() {
         this.api.showLoad();
         this.errors = {};
-        this.api.http.post(this.api.url + '/user/invite/' + this.navParams.get('userId'),this.invite,this.api.setHeaders(true)).subscribe(
+        this.api.http.post(this.api.url + '/user/invite/' + this.navParams.get('userId'), this.invite, this.api.setHeaders(true)).subscribe(
             (data: any) => {
                 console.log('invite: ', data);
                 this.api.hideLoad();
