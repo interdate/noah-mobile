@@ -203,6 +203,7 @@ export class ChatPage {
 
     ionViewWillLeave() {
         $('.footer').hide();
+        $('.body .userway.userway_p3').show();
         clearInterval(this.interval);
     }
 
@@ -215,6 +216,8 @@ export class ChatPage {
         $('.footer').removeAttr('style');
         $('#back').show();
         $('#register,#logout,#contact').hide();
+        $('.body .userway.userway_p3').hide();
+
     }
 
 }

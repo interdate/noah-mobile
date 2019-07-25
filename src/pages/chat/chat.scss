@@ -3,10 +3,11 @@ page-chat {
     clear: both;
   }
   #mes{
-    width: 75%;
+    width: 60%;
     height: 58px;
     border: 1px solid #149dbb;
     border-radius: 3px;
+    margin-right: 46px;
     float:right;
   }
   #send-button{
@@ -62,4 +63,6 @@ page-chat {
     background-repeat: no-repeat;
     background-size: contain;
   }
+
+
 }
