@@ -91,7 +91,7 @@ export class DatingPage {
     }
 
     onChange(event) {
-        this.api.http.get(this.api.url + '/restaurants/' + event, this.api.setHeaders(false)).subscribe(data => {
+        this.api.http.get(this.api.url + '/restaurants/' + event, this.api.setHeaders(false)).subscribe((data: any) => {
             this.form.fields[2].options = data.result;
             this.form.fields[2].count = data.result.length;
             console.log(this.form.fields)
